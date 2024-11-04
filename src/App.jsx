@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useContext } from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { Box, Flex, Spacer, Button, Heading } from "@chakra-ui/react";
@@ -14,7 +13,7 @@ const App = () => {
     <Box>
       {/* Barra de Navegação */}
       <Flex as="nav" bg="teal.500" color="white" padding={4} align="center">
-        <Heading size="md">My App</Heading>
+        <Heading size="md">Meus Pokémons</Heading>
         <Spacer />
         {user ? (
           <>

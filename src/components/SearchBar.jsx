@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
+
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 
-// eslint-disable-next-line react/prop-types
 const SearchBar = ({ searchQuery, setSearchQuery }) => {
   return (
     <InputGroup mb={4}>

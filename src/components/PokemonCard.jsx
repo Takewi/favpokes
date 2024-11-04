@@ -1,9 +1,14 @@
 /* eslint-disable react/prop-types */
 
+import { useContext } from "react";
 import { Box, Image, Text, IconButton, Badge } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
+import CommentSection from "./CommentSection";
+import { AuthContext } from "../context/AuthContext";
 
 const PokemonCard = ({ pokemon, isFavorite, toggleFavorite }) => {
+  const { addComment, removeComment } = useContext(AuthContext);
+
   return (
     <Box
       borderWidth="1px"
@@ -56,7 +61,9 @@ const PokemonCard = ({ pokemon, isFavorite, toggleFavorite }) => {
       </Box>
 
       <IconButton
-        aria-label="Add to favorites"
+        aria-label={
+          isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"
+        }
         icon={<StarIcon />}
         colorScheme={isFavorite ? "yellow" : "gray"}
         position="absolute"
@@ -64,6 +71,16 @@ const PokemonCard = ({ pokemon, isFavorite, toggleFavorite }) => {
         right="2"
         onClick={() => toggleFavorite(pokemon)}
       />
+
+      {/* Se for favorito, exibe a seção de comentários */}
+      {isFavorite && (
+        <CommentSection
+          pokemonId={pokemon.id}
+          comments={pokemon.comments || []}
+          addComment={addComment}
+          removeComment={removeComment}
+        />
+      )}
     </Box>
   );
 };

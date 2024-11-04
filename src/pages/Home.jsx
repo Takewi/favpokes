@@ -14,7 +14,8 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 const Home = () => {
-  const { favorites, toggleFavorite } = useContext(AuthContext);
+  const { favorites, toggleFavorite, addComment, removeComment } =
+    useContext(AuthContext);
 
   const [pokemons, setPokemons] = useState([]); // Lista completa de Pokémons
   const [filteredPokemons, setFilteredPokemons] = useState([]); // Pokémons filtrados pela pesquisa
@@ -59,17 +60,30 @@ const Home = () => {
     fetchPokemons();
   }, []);
 
-  // Atualizar a lista filtrada sempre que a consulta de pesquisa mudar
+  // Atualizar a lista filtrada sempre que a consulta de pesquisa ou favoritos mudarem
   useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredPokemons(pokemons);
-    } else {
-      const filtered = pokemons.filter((pokemon) =>
+    let filtered = pokemons;
+
+    // Filtra com base na consulta de pesquisa
+    if (searchQuery.trim() !== "") {
+      filtered = filtered.filter((pokemon) =>
         pokemon.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredPokemons(filtered);
     }
-  }, [searchQuery, pokemons]);
+
+    // Exclui os Pokémons que já estão nos favoritos
+    filtered = filtered.filter(
+      (pokemon) => !favorites.some((fav) => fav.id === pokemon.id)
+    );
+
+    setFilteredPokemons(filtered);
+  }, [searchQuery, pokemons, favorites]);
+
+  // Função para obter Pokémon com comentários se for favorito
+  const getPokemonWithComments = (pokemon) => {
+    const favorite = favorites.find((fav) => fav.id === pokemon.id);
+    return favorite ? { ...pokemon, comments: favorite.comments } : pokemon;
+  };
 
   return (
     <Box>
@@ -90,9 +104,11 @@ const Home = () => {
             {favorites.map((pokemon) => (
               <PokemonCard
                 key={pokemon.id}
-                pokemon={pokemon}
+                pokemon={getPokemonWithComments(pokemon)}
                 isFavorite={true}
                 toggleFavorite={toggleFavorite}
+                addComment={addComment}
+                removeComment={removeComment}
               />
             ))}
           </SimpleGrid>
@@ -110,9 +126,11 @@ const Home = () => {
           {filteredPokemons.map((pokemon) => (
             <PokemonCard
               key={pokemon.id}
-              pokemon={pokemon}
+              pokemon={getPokemonWithComments(pokemon)}
               isFavorite={favorites.some((fav) => fav.id === pokemon.id)}
               toggleFavorite={toggleFavorite}
+              addComment={addComment}
+              removeComment={removeComment}
             />
           ))}
         </SimpleGrid>

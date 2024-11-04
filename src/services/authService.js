@@ -1,5 +1,3 @@
-// src/services/authService.js
-
 export const mockLogin = (email, password) => {
   return new Promise((resolve, reject) => {
     // Simula uma chamada à API com delay de 2 segundos
